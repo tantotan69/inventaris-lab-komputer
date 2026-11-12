@@ -1,7 +1,7 @@
+
 import 'package:flutter/material.dart';
 import 'dashboard_page.dart';
 
-// Halaman Login menggunakan StatefulWidget
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -10,36 +10,36 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // Controller untuk membaca input pengguna
+  // Controller untuk mengambil input pengguna
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
 
-  // Fungsi ketika tombol Login ditekan
+  // Mengatur visibilitas password
+  bool isPasswordVisible = false;
 
+  // Fungsi login
   void login() {
-    String username = usernameController.text;
+    String username = usernameController.text.trim();
     String password = passwordController.text;
 
     if (username == 'admin' && password == '12345') {
-
-      // Berpindah dari halaman Login ke Dashboard
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => const DashboardPage(),
         ),
       );
-
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Username atau password salah'),
+          backgroundColor: Colors.red,
         ),
       );
     }
   }
 
-
+  // Membersihkan controller
   @override
   void dispose() {
     usernameController.dispose();
@@ -52,15 +52,16 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       backgroundColor: Colors.white,
 
+      // Bagian judul aplikasi
       appBar: AppBar(
         title: const Text('Inventaris Lab Komputer'),
         backgroundColor: Colors.green,
         foregroundColor: Colors.white,
       ),
 
-
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
+
         child: ConstrainedBox(
           constraints: BoxConstraints(
             minHeight: MediaQuery.of(context).size.height -
@@ -68,9 +69,11 @@ class _LoginPageState extends State<LoginPage> {
                 MediaQuery.of(context).padding.top -
                 48,
           ),
+
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // Ikon komputer
               const Icon(
                 Icons.computer,
                 size: 80,
@@ -79,6 +82,7 @@ class _LoginPageState extends State<LoginPage> {
 
               const SizedBox(height: 16),
 
+              // Nama aplikasi
               const Text(
                 'INVENTARIS LAB KOMPUTER',
                 textAlign: TextAlign.center,
@@ -88,6 +92,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
 
+              // Nama sekolah
               const Text(
                 'SMA IKIP VETERAN III TAMBAKROMO',
                 textAlign: TextAlign.center,
@@ -95,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
 
               const SizedBox(height: 30),
 
-              // Input username.
+              // Input username
               TextField(
                 controller: usernameController,
                 decoration: const InputDecoration(
@@ -107,20 +112,40 @@ class _LoginPageState extends State<LoginPage> {
 
               const SizedBox(height: 16),
 
-              // Input password.
+              // Input password dengan ikon mata
               TextField(
                 controller: passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
+
+                // Password tersembunyi atau terlihat
+                obscureText: !isPasswordVisible,
+
+                decoration: InputDecoration(
                   labelText: 'Password',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.lock),
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.lock),
+
+                  // Tombol melihat password
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        isPasswordVisible = !isPasswordVisible;
+                      });
+                    },
+                  ),
                 ),
+
+                // Login ketika tombol Enter ditekan
+                onSubmitted: (_) => login(),
               ),
 
               const SizedBox(height: 24),
 
-              // Tombol Login.
+              // Tombol login
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -130,14 +155,18 @@ class _LoginPageState extends State<LoginPage> {
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.all(16),
                   ),
-                  child: const Text('LOGIN'),
+                  child: const Text(
+                    'LOGIN',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ),
             ],
           ),
         ),
       ),
-
     );
   }
 }
