@@ -1,4 +1,6 @@
 # inventaris_lab
+user : admin
+password : 12345
 
 A new Flutter project.
 
